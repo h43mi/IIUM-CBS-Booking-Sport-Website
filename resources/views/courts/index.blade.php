@@ -198,20 +198,33 @@
     @foreach($courts as $court)
     <div class="col-md-4 mb-4 court-item" data-sport="{{ $court->type }}">
         <div class="card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
-            @php
-                $images = ['court1.webp', 'court2.jpg', 'court3.jpg'];
-                $currentImage = $images[$loop->index % count($images)];
-            @endphp
+            
             <div style="height: 200px; overflow: hidden; background-color: #f0f0f0;">
-                <img src="{{ asset('assets/img/' . $currentImage) }}" class="w-100 h-100 object-fit-cover" alt="Court Image"> 
+                {{-- FIX: Check if the court has a specific image uploaded/assigned --}}
+                @if($court->image)
+                    {{-- Check if it's an uploaded file (in storage/courts) or a default asset --}}
+                    @if(\Illuminate\Support\Str::startsWith($court->image, 'courts/'))
+                        {{-- It is an uploaded image --}}
+                        <img src="{{ asset('storage/' . $court->image) }}" class="w-100 h-100 object-fit-cover" alt="{{ $court->name }}">
+                    @else
+                        {{-- It is a default asset/seeded image --}}
+                        <img src="{{ asset('assets/img/' . $court->image) }}" class="w-100 h-100 object-fit-cover" alt="{{ $court->name }}">
+                    @endif
+                @else
+                    {{-- Fallback if absolutely no image is set --}}
+                    <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
+                        <i class="bi bi-image fs-1 opacity-25"></i>
+                    </div>
+                @endif
             </div>
+
             <div class="card-body text-center">
                 <div class="mb-2">
                     <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">{{ $court->type }}</span>
                 </div>
                 <h4 class="card-title fw-bold my-3">{{ $court->name }}</h4>
                 <p class="text-muted small">Standard {{ $court->type }} Court</p>
-                <h3 class="text-success fw-bold">RM {{ $court->price }}</h3>
+                <h3 class="text-success fw-bold">RM {{ number_format($court->price, 2) }}</h3>
                 <div class="d-grid mt-4">
                     @auth
                         <a href="{{ route('bookings.create', $court->id) }}" class="btn btn-success rounded-pill py-2 fw-bold">Book Now</a>
