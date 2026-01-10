@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\CourtController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,3 +90,5 @@ Route::middleware([
     Route::post('/bookings/cancel/{group_id}', [BookingController::class, 'cancel'])->name('bookings.cancel');
     
 });
+
+Route::post('/contact-submit', [ContactController::class, 'sendEmail'])->name('contact.send');

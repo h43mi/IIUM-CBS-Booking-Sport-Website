@@ -285,4 +285,124 @@
         }
     }
 </script>
+
+{{-- CONTACT US SECTION START --}}
+<style>
+    /* Custom grey background specific to contact section */
+    .contact-section-bg {
+        background-color: #a6a6a6; /* Medium grey match */
+        color: white;
+    }
+    
+    .contact-input {
+        border: none;
+        border-radius: 0;
+        padding: 15px;
+        margin-bottom: 15px;
+        width: 100%;
+    }
+    
+    .contact-btn {
+        background-color: #ff0000; /* Bright red */
+        color: white;
+        border: none;
+        border-radius: 50px; /* Pill shape */
+        padding: 10px 40px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .contact-btn:hover {
+        background-color: #cc0000;
+        color: white;
+    }
+
+    .contact-header {
+        font-weight: 400; /* Thin font for "CONTACT US" */
+        color: #333;
+        font-size: 2.5rem;
+    }
+
+    .contact-sub-header {
+        color: #ff0000; /* Red text */
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .contact-icon {
+        font-size: 1.5rem;
+        margin-right: 15px;
+        color: black;
+    }
+    
+    .contact-info-text {
+        color: white;
+        font-size: 0.95rem;
+    }
+</style>
+
+<div class="full-bleed-section contact-section-bg py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            
+            {{-- LEFT COLUMN: FORM --}}
+            <div class="col-md-6">
+                {{-- Point the form to the route we will create in Part 2 --}}
+                <form action="{{ route('contact.send') }}" method="POST">
+                    @csrf {{-- Security token required by Laravel --}}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" name="name" class="contact-input" placeholder="Name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="email" name="email" class="contact-input" placeholder="Email" required>
+                        </div>
+                    </div>
+                    
+                    <textarea name="message" class="contact-input" rows="6" placeholder="Message" required></textarea>
+                    
+                    <div class="text-center mt-3">
+                        <button type="submit" class="contact-btn">Send Message</button>
+                    </div>
+                </form>
+            </div>
+
+            {{-- RIGHT COLUMN: INFO --}}
+            <div class="col-md-6 ps-md-5 mt-4 mt-md-0">
+                <h2 class="contact-header mb-0">CONTACT US</h2>
+                <p class="contact-sub-header">FRENZY SPORTS ARENA SHAH ALAM</p>
+                
+                {{-- Address --}}
+                <div class="d-flex align-items-start mb-3">
+                    <i class="bi bi-geo-alt-fill contact-icon"></i>
+                    <p class="contact-info-text mb-0">
+                        Lot 7 Jalan Lada Sulah 16/11, seksyen 16, <br>
+                        40150 Shah Alam, Selangor
+                    </p>
+                </div>
+
+                {{-- Email --}}
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-chat-left-text-fill contact-icon"></i> <p class="contact-info-text mb-0">
+                        frenzy.erwan@gmail.com
+                    </p>
+                </div>
+
+                {{-- Phone --}}
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-telephone-fill contact-icon"></i>
+                    <p class="contact-info-text mb-0">
+                        0355100175 or 0192379934
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{{-- CONTACT US SECTION END --}}
+
+
 @endsection
