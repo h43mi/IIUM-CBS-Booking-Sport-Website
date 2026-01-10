@@ -29,7 +29,7 @@
         background-size: cover;
         background-position: center;
         /* Darken images slightly so text pops */
-        filter: brightness(0.4); 
+        filter: brightness(0.2); 
     }
 
     /* Ensure text sits on TOP of the slider */
@@ -83,6 +83,103 @@
 </div>
 {{-- UPDATED HERO SECTION END --}}
 
+{{-- FEATURES / ICONS SECTION START --}}
+<style>
+    /* 1. Generic Full Width Class (Reusable) */
+    .full-bleed-section {
+        width: 100vw;              /* Force full viewport width */
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;        /* Pull to left edge */
+        margin-right: -50vw;       /* Pull to right edge */
+    }
+
+    /* 2. Custom Icon Box Styles */
+    .feature-icon-box {
+        width: 70px;
+        height: 70px;
+        background-color: white;
+        color: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem auto; 
+        border-radius: 4px;
+    }
+    
+    .feature-title {
+        letter-spacing: 2px;
+        font-size: 0.9rem;
+    }
+    
+    .feature-desc {
+        color: #cccccc;
+        font-size: 0.9rem;
+        font-weight: 300;
+        line-height: 1.6;
+    }
+    
+    .feature-desc em {
+        font-style: italic;
+        color: white;
+        font-weight: 500;
+    }
+</style>
+
+{{-- Added 'full-bleed-section' class here --}}
+<div class="full-bleed-section container-fluid bg-black text-white py-5 mb-5">
+    <div class="container">
+        <div class="row text-center">
+            
+            {{-- 1. BADMINTON --}}
+            <div class="col-md-3 mb-4 mb-md-0">
+                <div class="feature-icon-box shadow-sm">
+                    <i class="bi bi-lightning-fill fs-2"></i>
+                </div>
+                <h5 class="fw-bold text-uppercase feature-title mb-3">Badminton</h5>
+                <p class="feature-desc px-2">
+                    Official size <em>10mm rubberized</em> Badminton courts available for hourly rental at <em>superb rates!</em>
+                </p>
+            </div>
+
+            {{-- 2. FUTSAL --}}
+            <div class="col-md-3 mb-4 mb-md-0">
+                <div class="feature-icon-box shadow-sm">
+                    <i class="bi bi-dribbble fs-2"></i>
+                </div>
+                <h5 class="fw-bold text-uppercase feature-title mb-3">Futsal Court</h5>
+                <p class="feature-desc px-2">
+                    Interlocking official size <em>rubberized Futsal</em> Sports Court available for rental hourly.
+                </p>
+            </div>
+
+            {{-- 3. VOLLEYBALL --}}
+            <div class="col-md-3 mb-4 mb-md-0">
+                <div class="feature-icon-box shadow-sm">
+                    <i class="bi bi-life-preserver fs-2"></i>
+                </div>
+                <h5 class="fw-bold text-uppercase feature-title mb-3">Volleyball</h5>
+                <p class="feature-desc px-2">
+                    Professional <em>indoor flooring</em> suitable for high-impact tournaments and <em>casual play</em>.
+                </p>
+            </div>
+
+            {{-- 4. TENNIS --}}
+            <div class="col-md-3 mb-4 mb-md-0">
+                <div class="feature-icon-box shadow-sm">
+                    <i class="bi bi-circle-fill fs-3"></i>
+                </div>
+                <h5 class="fw-bold text-uppercase feature-title mb-3">Tennis</h5>
+                <p class="feature-desc px-2">
+                    Standard <em>hard court</em> surfacing designed for optimal ball bounce and <em>long term</em> booking.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+{{-- FEATURES / ICONS SECTION END --}}
 
 {{-- COURT LIST SECTION --}}
 <div id="courts-list" class="row text-center mb-5 mt-5">
@@ -133,6 +230,8 @@
         </div>
     </div>
 </div>
+
+
 
 {{-- 2. LOAD SWIPER JS --}}
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
