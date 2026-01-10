@@ -26,7 +26,7 @@ class ContactController extends Controller
         // 3. Send the email using Laravel's Mail function
         // Note: You need to configure your .env file for this to work!
         Mail::send([], [], function ($message) use ($data) {
-            $message->to('mini22killer@gmail.com')
+            $message->to('booksportiium@gmail.com')
                 ->subject('New Contact Form Enquiry')
                 ->html("
                 <h3>New Enquiry Received</h3>

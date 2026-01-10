@@ -235,6 +235,7 @@
 
 {{-- 2. LOAD SWIPER JS --}}
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     // Initialize Swiper
@@ -284,6 +285,21 @@
             msg.style.display = 'none';
         }
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        // Check if Laravel sent a success message in the session
+        @if(session('success'))
+            Swal.fire({
+                title: 'Message Sent!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonColor: '#ff0000', // Matches your red Contact button
+                confirmButtonText: 'Great!'
+            });
+        @endif
+        
+    });
 </script>
 
 {{-- CONTACT US SECTION START --}}
@@ -372,7 +388,7 @@
             {{-- RIGHT COLUMN: INFO --}}
             <div class="col-md-6 ps-md-5 mt-4 mt-md-0">
                 <h2 class="contact-header mb-0">CONTACT US</h2>
-                <p class="contact-sub-header">FRENZY SPORTS ARENA SHAH ALAM</p>
+                <p class="contact-sub-header">IIUM</p>
                 
                 {{-- Address --}}
                 <div class="d-flex align-items-start mb-3">
@@ -386,7 +402,7 @@
                 {{-- Email --}}
                 <div class="d-flex align-items-center mb-3">
                     <i class="bi bi-chat-left-text-fill contact-icon"></i> <p class="contact-info-text mb-0">
-                        frenzy.erwan@gmail.com
+                        booksportiium@gmail.com
                     </p>
                 </div>
 
