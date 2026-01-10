@@ -20,7 +20,7 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 mb-4">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 mb-0">
         <div class="container">
             
             <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
@@ -80,6 +80,51 @@
             </div>
         </div>
     </nav>
+
+
+    <style>
+    .full-bleed-hero {
+        width: 100vw;              /* Force full viewport width */
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;        /* Pull to left edge */
+        margin-right: -50vw;       /* Pull to right edge */
+        border-radius: 0 !important; /* Ensure corners are sharp */
+        /* If there is a white gap at the top, un-comment the line below and adjust the number */
+        /* margin-top: -20px; */ 
+    }
+    .swiper {
+        width: 100%;
+        height: 100%;
+    }
+
+    .swiper-slide {
+        background-size: cover;
+        background-position: center;
+        /* Darken images slightly so text pops */
+        filter: brightness(0.4); 
+    }
+
+    .hero-content-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10; /* Higher than swiper */
+        pointer-events: none; /* Lets clicks pass through to swiper if needed, but we re-enable for buttons */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Re-enable clicking on the button/text */
+    .hero-content-overlay * {
+        pointer-events: auto;
+    }
+</style>
 
     <div class="container" style="min-height: 80vh;">
         @yield('content')
