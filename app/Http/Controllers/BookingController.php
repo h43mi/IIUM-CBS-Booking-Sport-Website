@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\Court;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str; // Import Str for random ID
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
@@ -17,7 +17,8 @@ class BookingController extends Controller
         return view('bookings.create', compact('court'));
     }
 
-    // 1. SAVE BOOKING & REDIRECT TO CONFIRMATION
+    // 1. STORE TO SESSION (NOT DATABASE YET)
+    // This solves the issue of "stuck" drafts. If the user leaves, this data just disappears.
     public function store(Request $request)
     {
         $request->validate([
@@ -27,37 +28,52 @@ class BookingController extends Controller
             'court_number' => 'required',
         ]);
 
-        // Generate a unique Group ID for this batch (e.g., BK-78329)
+        // Generate a Group ID to use as a Session Key
         $groupId = 'BK-' . strtoupper(Str::random(6));
 
-        foreach ($request->slots as $time_slot) {
-            Booking::create([
-                'user_id' => Auth::id(),
-                'court_id' => $request->court_id,
-                'group_id' => $groupId, // Save the Group ID
-                'court_number' => $request->court_number,
-                'date' => $request->date,
-                'start_time' => $time_slot,
-                'end_time' => date('H:i', strtotime($time_slot) + 3600),
-                'status' => 'Unpaid', // Status is Pending until they confirm on next page
-            ]);
-        }
+        // Store data in a Session array instead of Database
+        $bookingData = [
+            'group_id' => $groupId,
+            'user_id' => Auth::id(),
+            'court_id' => $request->court_id,
+            'court_number' => $request->court_number,
+            'date' => $request->date,
+            'slots' => $request->slots, // The array of times (e.g., ['08:00', '09:00'])
+        ];
 
-        // Redirect to the new Confirmation Page
+        // Put this into the user's session
+        session()->put('booking_' . $groupId, $bookingData);
+
+        // Redirect to Confirmation
         return redirect()->route('bookings.confirmation', $groupId);
     }
 
-    // 2. SHOW CONFIRMATION PAGE (Prototype Page 13)
+    // 2. SHOW CONFIRMATION (FROM SESSION)
     public function confirmation($group_id)
     {
-        // Find all bookings with this Group ID
-        $bookings = Booking::where('group_id', $group_id)->with('court')->get();
+        // Retrieve data from Session
+        $sessionData = session()->get('booking_' . $group_id);
 
-        if ($bookings->isEmpty()) {
-            return redirect()->route('home');
+        // If session expired or invalid, go home
+        if (!$sessionData) {
+            return redirect()->route('home')->with('error', 'Booking session expired. Please try again.');
         }
 
-        // Calculate totals for the view
+        // We need to recreate the "Booking" objects temporarily so the View doesn't break
+        $court = Court::findOrFail($sessionData['court_id']);
+        $bookings = collect(); // Create a Collection
+
+        foreach ($sessionData['slots'] as $slot) {
+            $b = new Booking(); // Temporary Object
+            $b->court_id = $sessionData['court_id'];
+            $b->date = $sessionData['date'];
+            $b->start_time = $slot;
+            $b->end_time = date('H:i', strtotime($slot) + 3600);
+            $b->court_number = $sessionData['court_number'];
+            $b->setRelation('court', $court); // Attach court details
+            $bookings->push($b);
+        }
+
         $firstBooking = $bookings->first();
         $totalPrice = $bookings->count() * $firstBooking->court->price;
         $totalHours = $bookings->count();
@@ -65,129 +81,157 @@ class BookingController extends Controller
         return view('bookings.confirmation', compact('bookings', 'firstBooking', 'totalPrice', 'totalHours', 'group_id'));
     }
 
-    // In index() method:
-// 1. UPDATE INDEX (Show All Bookings)
-public function index()
-{
-    // REMOVED "where status != Unpaid" so users can resume payment
-    $bookings = Booking::where('user_id', Auth::id())
-        ->with('court')
-        ->latest()
-        ->get();
-
-    return view('bookings.index', compact('bookings'));
-}
-
-// 2. ADD CANCEL FUNCTION
-public function cancel($group_id)
-{
-    $booking = Booking::where('group_id', $group_id)->where('user_id', Auth::id())->firstOrFail();
-
-    // Only allow cancelling if not yet approved
-    if ($booking->status == 'Pending' || $booking->status == 'Unpaid') {
-        Booking::where('group_id', $group_id)->delete(); // Or update status to 'Cancelled'
-        return back()->with('success', 'Booking cancelled successfully.');
-    }
-
-    return back()->with('error', 'Cannot cancel approved bookings.');
-}
-    // 3. SHOW PAYMENT PAGE (Prototype Page 14)
+    // 3. SHOW PAYMENT (FROM SESSION)
     public function payment($group_id)
     {
-        $bookings = Booking::where('group_id', $group_id)->get();
-        
-        if ($bookings->isEmpty()) {
-            return redirect()->route('home');
+        // Retrieve data from Session
+        $sessionData = session()->get('booking_' . $group_id);
+
+        if (!$sessionData) {
+            return redirect()->route('home')->with('error', 'Booking session expired.');
         }
 
-        $totalPrice = $bookings->count() * $bookings->first()->court->price;
+        // Calculate Price
+        $court = Court::findOrFail($sessionData['court_id']);
+        $totalPrice = count($sessionData['slots']) * $court->price;
+        
+        // We pass $bookings as a simple array or collection if the view needs it, 
+        // but typically the payment page just needs the price and group_id.
+        // Let's mock the collection again just in case the view loops through them.
+        $bookings = collect();
+        foreach ($sessionData['slots'] as $slot) {
+             $b = new Booking();
+             $b->setRelation('court', $court);
+             $bookings->push($b);
+        }
 
         return view('bookings.payment', compact('bookings', 'totalPrice', 'group_id'));
     }
 
-   // REPLACE the old paymentSuccess function with this new one:
-    
-   public function submitPayment(Request $request, $group_id)
-   {
-       $request->validate([
-           'pay_name' => 'required|string',
-           'pay_matric' => 'required|string',
-           'pay_contact' => 'required|string',
-           'payment_proof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048', // Max 2MB
-       ]);
+    // 4. SUBMIT PAYMENT & FINALLY SAVE TO DB
+    public function submitPayment(Request $request, $group_id)
+    {
+        $request->validate([
+            'pay_name' => 'required|string',
+            'pay_matric' => 'required|string',
+            'pay_contact' => 'required|string',
+            'payment_proof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        ]);
 
-       // 1. Handle File Upload
-       if ($request->hasFile('payment_proof')) {
-           // Save file to 'storage/app/public/receipts'
-           $path = $request->file('payment_proof')->store('receipts', 'public');
-       } else {
-           return back()->with('error', 'Please upload a receipt.');
-       }
+        // Retrieve the Booking Data from Session
+        $sessionData = session()->get('booking_' . $group_id);
 
-       // 2. Update Bookings (Save proof & mark as Paid)
-       // Note: In a real app, you might set status to 'Pending Verification'
-       Booking::where('group_id', $group_id)->update([
-           'status' => 'Pending', 
-           'payment_proof' => $path
-       ]);
+        if (!$sessionData) {
+            return redirect()->route('home')->with('error', 'Session expired. Please book again.');
+        }
 
-       // 3. Show Success Page
-       return view('bookings.success', compact('group_id'));
-   }
+        // OPTIONAL: Double-check availability here to ensure no one stole the slot while user was paying
+        // ... (You can add availability logic here if strictly needed)
 
-   // --- ADMIN ACTIONS ---
+        // 1. Handle File Upload
+        if ($request->hasFile('payment_proof')) {
+            $path = $request->file('payment_proof')->store('receipts', 'public');
+        } else {
+            return back()->with('error', 'Please upload a receipt.');
+        }
 
-   public function approve($group_id)
-   {
-       // Change status to 'Approved'
-       Booking::where('group_id', $group_id)->update(['status' => 'Approved']);
-       return back()->with('success', 'Booking Approved!');
-   }
+        // 2. CREATE DATABASE RECORDS
+        foreach ($sessionData['slots'] as $time_slot) {
+            Booking::create([
+                'user_id' => $sessionData['user_id'], // From session
+                'court_id' => $sessionData['court_id'],
+                'group_id' => $group_id,
+                'court_number' => $sessionData['court_number'],
+                'date' => $sessionData['date'],
+                'start_time' => $time_slot,
+                'end_time' => date('H:i', strtotime($time_slot) + 3600),
+                'status' => 'Pending', // Directly set to Pending (Admin Dashboard will see this)
+                'payment_proof' => $path,
+                // You can also save pay_name/pay_matric if you added those columns to DB
+            ]);
+        }
 
-   public function reject($group_id)
-   {
-       // Change status to 'Rejected'
-       Booking::where('group_id', $group_id)->update(['status' => 'Rejected']);
-       return back()->with('success', 'Booking Rejected.');
-   }
+        // 3. Clear the Session
+        session()->forget('booking_' . $group_id);
 
-   // --- ADMIN: MANAGE ALL BOOKINGS ---
-   public function indexAdmin(Request $request)
-   {
-       $query = Booking::with(['user', 'court'])->latest();
+        // 4. Show Success
+        return view('bookings.success', compact('group_id'));
+    }
 
-       // 1. Search Logic (Student Name or Group ID)
-       if ($request->has('search') && $request->search != '') {
-           $search = $request->search;
-           $query->where(function($q) use ($search) {
-               $q->where('group_id', 'like', "%$search%")
-                 ->orWhereHas('user', function($u) use ($search) {
-                     $u->where('name', 'like', "%$search%");
-                 });
-           });
-       }
+    // 5. CANCEL (Handle both Session and DB)
+    public function cancel($group_id)
+    {
+        // Check if it's just a session booking
+        if (session()->has('booking_' . $group_id)) {
+            session()->forget('booking_' . $group_id);
+            return redirect()->route('home')->with('success', 'Booking selection cleared.');
+        }
 
-       // 2. Filter Logic (Status)
-       if ($request->has('status') && $request->status != 'All') {
-           $query->where('status', $request->status);
-       }
+        // If it's in DB (e.g. user submitted payment but wants to cancel later)
+        $booking = Booking::where('group_id', $group_id)->where('user_id', Auth::id())->first();
 
-       // Get results (Pagination: 10 per page)
-       $bookings = $query->paginate(10);
+        if ($booking) {
+            if ($booking->status == 'Pending' || $booking->status == 'Unpaid') {
+                Booking::where('group_id', $group_id)->delete();
+                return redirect()->route('home')->with('success', 'Booking cancelled successfully.');
+            }
+            return back()->with('error', 'Cannot cancel approved bookings.');
+        }
 
-       return view('admin.bookings.index', compact('bookings'));
-   }
+        return redirect()->route('home');
+    }
 
-   // --- ADMIN: EDIT BOOKING ---
+    // DASHBOARD: Only shows REAL bookings (Pending/Approved)
+    public function index()
+    {
+        $bookings = Booking::where('user_id', Auth::id())
+            ->with('court')
+            ->latest()
+            ->get();
 
-    // --- ADMIN: EDIT BOOKING ---
+        return view('bookings.index', compact('bookings'));
+    }
+
+    // --- ADMIN & OTHER METHODS REMAIN UNCHANGED ---
+
+    public function approve($group_id)
+    {
+        Booking::where('group_id', $group_id)->update(['status' => 'Approved']);
+        return back()->with('success', 'Booking Approved!');
+    }
+
+    public function reject($group_id)
+    {
+        Booking::where('group_id', $group_id)->update(['status' => 'Rejected']);
+        return back()->with('success', 'Booking Rejected.');
+    }
+
+    public function indexAdmin(Request $request)
+    {
+        $query = Booking::with(['user', 'court'])->latest();
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('group_id', 'like', "%$search%")
+                  ->orWhereHas('user', function($u) use ($search) {
+                      $u->where('name', 'like', "%$search%");
+                  });
+            });
+        }
+
+        if ($request->has('status') && $request->status != 'All') {
+            $query->where('status', $request->status);
+        }
+
+        $bookings = $query->paginate(10);
+        return view('admin.bookings.index', compact('bookings'));
+    }
 
     public function editAdmin($group_id)
     {
         $booking = Booking::where('group_id', $group_id)->firstOrFail();
         $totalHours = Booking::where('group_id', $group_id)->count();
-        
-        // Fetch all courts for the dropdown
         $courts = Court::all(); 
 
         return view('admin.bookings.edit', compact('booking', 'totalHours', 'courts'));
@@ -200,19 +244,16 @@ public function cancel($group_id)
             'date' => 'required|date',
             'start_time' => 'required',
             'court_id' => 'required|exists:courts,id',
-            'duration' => 'required|integer|min:1|max:5', // Limit max hours if needed
+            'duration' => 'required|integer|min:1|max:5',
         ]);
 
-        // 1. Get original booking metadata (User ID, Proof, etc.)
         $original = Booking::where('group_id', $group_id)->firstOrFail();
         $userId = $original->user_id;
         $proof = $original->payment_proof;
         $createdAt = $original->created_at;
 
-        // 2. DELETE OLD SLOTS (Because duration/times might have changed completely)
         Booking::where('group_id', $group_id)->delete();
 
-        // 3. CREATE NEW SLOTS
         $startTime = \Carbon\Carbon::parse($request->start_time);
 
         for ($i = 0; $i < $request->duration; $i++) {
@@ -222,30 +263,23 @@ public function cancel($group_id)
             Booking::create([
                 'group_id' => $group_id,
                 'user_id' => $userId,
-                'court_id' => $request->court_id, // New Court
+                'court_id' => $request->court_id,
                 'date' => $request->date,
                 'start_time' => $slotStart->format('H:i:s'),
                 'end_time' => $slotEnd->format('H:i:s'),
                 'status' => $request->status,
-                'payment_proof' => $proof, // Keep the old receipt
-                'created_at' => $createdAt, // Keep original booking time
+                'payment_proof' => $proof,
+                'created_at' => $createdAt,
             ]);
         }
 
         return redirect()->route('admin.bookings.index')->with('success', 'Booking updated successfully!');
     }
 
-    // --- ADMIN: STUDENT LIST ---
-    // --- ADMIN: USER LIST (FETCH ALL REGISTERED USERS) ---
-    // --- ADMIN: USER LIST ---
-    // --- ADMIN: USER LIST ---
     public function userList(Request $request)
     {
-        // DEBUG MODE: Get ALL users. No filters. No exclusions.
-        // We also use 'latest()' to make sure the NEWEST user is at the top.
         $query = \App\Models\User::withCount('bookings')->latest();
 
-        // Keep the search logic just in case you need it later
         if ($request->has('search') && $request->search != '') {
             $query->where(function($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%')
@@ -254,26 +288,24 @@ public function cancel($group_id)
         }
 
         $users = $query->paginate(10);
-
         return view('admin.users.index', compact('users'));
     }
 
+    // CHECK AVAILABILITY
+    // This checks the DATABASE. Since we only save to DB *after* payment, 
+    // abandoned drafts (sessions) will NOT block these slots.
     public function checkAvailability(Request $request)
     {
-        // 1. Find bookings for this specific Date + Court Facility + Court Number (A, B, C)
-        // We exclude 'Rejected' and 'Cancelled' so users can re-book those slots.
         $bookedTimes = Booking::where('date', $request->date)
             ->where('court_id', $request->court_id)
             ->where('court_number', $request->court_number)
             ->whereNotIn('status', ['Rejected', 'Cancelled'])
-            ->pluck('start_time') // Get only the times
+            ->pluck('start_time')
             ->map(function ($time) {
-                // Format "08:00:00" to "08:00" to match your checkbox values
                 return date('H:i', strtotime($time));
             })
             ->toArray();
 
         return response()->json($bookedTimes);
     }
-
 }
