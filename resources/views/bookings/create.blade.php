@@ -84,11 +84,28 @@
 </style>
 
 @section('content')
+
+@php
+    // 1. DETERMINE THE CORRECT IMAGE URL
+    // Default fallback
+    $bgImage = asset('assets/img/court1.webp'); 
+    
+    if ($court->image) {
+        // Check if it's an uploaded image (Storage) or seeded image (Assets)
+        if (\Illuminate\Support\Str::startsWith($court->image, 'courts/')) {
+            $bgImage = asset('storage/' . $court->image);
+        } else {
+            $bgImage = asset('assets/img/' . $court->image);
+        }
+    }
+@endphp
+
 <div class="row justify-content-center">
     <div class="col-md-9">
         
         <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
-            <div style="height: 200px; background-image: url('{{ asset('assets/img/court1.webp') }}'); background-size: cover; background-position: center;">
+            {{-- 2. APPLY THE DYNAMIC IMAGE URL HERE --}}
+            <div style="height: 200px; background-image: url('{{ $bgImage }}'); background-size: cover; background-position: center;">
                 <div class="d-flex align-items-end h-100 p-4" style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
                     <div>
                         <span class="badge bg-primary text-white mb-2">Indoor Facility</span>
