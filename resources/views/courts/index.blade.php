@@ -25,11 +25,11 @@
         height: 100%;
     }
 
-    .swiper-slide {
+    .myHeroSwiper .swiper-slide {
         background-size: cover;
         background-position: center;
         /* Darken images slightly so text pops */
-        filter: brightness(0.2); 
+        filter: brightness(0.5); 
     }
 
     /* Ensure text sits on TOP of the slider */
@@ -83,103 +83,46 @@
 </div>
 {{-- UPDATED HERO SECTION END --}}
 
-{{-- FEATURES / ICONS SECTION START --}}
-<style>
-    /* 1. Generic Full Width Class (Reusable) */
-    .full-bleed-section {
-        width: 100vw;              /* Force full viewport width */
-        position: relative;
-        left: 50%;
-        right: 50%;
-        margin-left: -50vw;        /* Pull to left edge */
-        margin-right: -50vw;       /* Pull to right edge */
-    }
-
-    /* 2. Custom Icon Box Styles */
-    .feature-icon-box {
-        width: 70px;
-        height: 70px;
-        background-color: white;
-        color: black;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.5rem auto; 
-        border-radius: 4px;
-    }
-    
-    .feature-title {
-        letter-spacing: 2px;
-        font-size: 0.9rem;
-    }
-    
-    .feature-desc {
-        color: #cccccc;
-        font-size: 0.9rem;
-        font-weight: 300;
-        line-height: 1.6;
-    }
-    
-    .feature-desc em {
-        font-style: italic;
-        color: white;
-        font-weight: 500;
-    }
-</style>
-
-{{-- Added 'full-bleed-section' class here --}}
-<div class="full-bleed-section container-fluid bg-black text-white py-5 mb-5">
-    <div class="container">
-        <div class="row text-center">
-            
-            {{-- 1. BADMINTON --}}
-            <div class="col-md-3 mb-4 mb-md-0">
-                <div class="feature-icon-box shadow-sm">
-                    <i class="bi bi-lightning-fill fs-2"></i>
-                </div>
-                <h5 class="fw-bold text-uppercase feature-title mb-3">Badminton</h5>
-                <p class="feature-desc px-2">
-                    Official size <em>10mm rubberized</em> Badminton courts available for hourly rental at <em>superb rates!</em>
-                </p>
+{{-- FEATURES SECTION --}}
+<div class="row text-center my-5">
+    <div class="col-md-4 mb-4">
+        <div class="p-4 h-100 rounded-4 shadow-sm bg-white">
+            <div class="mb-3 text-success fs-1">
+                <i class="bi bi-calendar-check"></i>
             </div>
+            <h5 class="fw-bold">Easy Booking</h5>
+            <p class="text-muted small">
+                Book courts anytime with just a few clicks using our simple system.
+            </p>
+        </div>
+    </div>
 
-            {{-- 2. FUTSAL --}}
-            <div class="col-md-3 mb-4 mb-md-0">
-                <div class="feature-icon-box shadow-sm">
-                    <i class="bi bi-dribbble fs-2"></i>
-                </div>
-                <h5 class="fw-bold text-uppercase feature-title mb-3">Futsal Court</h5>
-                <p class="feature-desc px-2">
-                    Interlocking official size <em>rubberized Futsal</em> Sports Court available for rental hourly.
-                </p>
+    <div class="col-md-4 mb-4">
+        <div class="p-4 h-100 rounded-4 shadow-sm bg-white">
+            <div class="mb-3 text-success fs-1">
+                <i class="bi bi-clock-history"></i>
             </div>
+            <h5 class="fw-bold">Real-Time Availability</h5>
+            <p class="text-muted small">
+                View court availability instantly and avoid booking conflicts.
+            </p>
+        </div>
+    </div>
 
-            {{-- 3. VOLLEYBALL --}}
-            <div class="col-md-3 mb-4 mb-md-0">
-                <div class="feature-icon-box shadow-sm">
-                    <i class="bi bi-life-preserver fs-2"></i>
-                </div>
-                <h5 class="fw-bold text-uppercase feature-title mb-3">Volleyball</h5>
-                <p class="feature-desc px-2">
-                    Professional <em>indoor flooring</em> suitable for high-impact tournaments and <em>casual play</em>.
-                </p>
+    <div class="col-md-4 mb-4">
+        <div class="p-4 h-100 rounded-4 shadow-sm bg-white">
+            <div class="mb-3 text-success fs-1">
+                <i class="bi bi-people"></i>
             </div>
-
-            {{-- 4. TENNIS --}}
-            <div class="col-md-3 mb-4 mb-md-0">
-                <div class="feature-icon-box shadow-sm">
-                    <i class="bi bi-circle-fill fs-3"></i>
-                </div>
-                <h5 class="fw-bold text-uppercase feature-title mb-3">Tennis</h5>
-                <p class="feature-desc px-2">
-                    Standard <em>hard court</em> surfacing designed for optimal ball bounce and <em>long term</em> booking.
-                </p>
-            </div>
-
+            <h5 class="fw-bold">Student Friendly</h5>
+            <p class="text-muted small">
+                Designed specially for IIUM students and sports communities.
+            </p>
         </div>
     </div>
 </div>
-{{-- FEATURES / ICONS SECTION END --}}
+
+<hr class="my-5 opacity-25">
 
 {{-- COURT LIST SECTION --}}
 <div id="courts-list" class="row text-center mb-5 mt-5">
@@ -193,6 +136,16 @@
         </div>
     </div>
 </div>
+
+<style>
+    .card {
+        transition: transform 0.25s ease, box-shadow .25s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgb(0, 0, 0);
+    }
+</style>
 
 <div class="row justify-content-center">
     @foreach($courts as $court)
@@ -244,7 +197,7 @@
     </div>
 </div>
 
-
+<hr class="my-5 opacity-25">
 
 {{-- 2. LOAD SWIPER JS --}}
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -315,24 +268,158 @@
     });
 </script>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css">
+
+{{-- USER FEEDBACK SECTION --}}
+<div class="my-5 py-5 bg-light rounded-4 shadow-sm">
+    <div class="text-center mb-4">
+        <h3 class="fw-bold">What Our Users Say</h3>
+        <p class="text-muted">Feedback from students who used the court booking system</p>
+    </div>
+
+    <div class="swiper feedbackSwiper px-4 feedback-swiper">
+    <style>
+    /* Move swiper pagination below cards */
+        .feedback-swiper {
+            padding-bottom: 10px; /* Space for pagination */
+        }
+
+        .feedback-swiper .swiper-pagination {
+            position: relative;
+            margin-top: 25px;
+        }
+    </style>
+        <div class="swiper-wrapper">
+
+            {{-- Feedback 1 --}}
+            <div class="swiper-slide">
+                <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                    <p class="text-muted fst-italic">
+                        “The booking process is very smooth and easy to use. I can book courts anytime!”
+                    </p>
+                    <hr>
+                    <h6 class="fw-bold mb-0">Muhammad Adam Shazwan</h6>
+                    <small class="text-muted">Mustangs Badminton Player</small>
+                </div>
+            </div>
+
+            {{-- Feedback 2 --}}
+            <div class="swiper-slide">
+                <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                    <p class="text-muted fst-italic">
+                        “I love the clean interface and fast booking confirmation. Highly recommended.”
+                    </p>
+                    <hr>
+                    <h6 class="fw-bold mb-0">Abdul Halim</h6>
+                    <small class="text-muted">Mustangs Volleyball Player</small>
+                </div>
+            </div>
+
+            {{-- Feedback 3 --}}
+            <div class="swiper-slide">
+                <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                    <p class="text-muted fst-italic">
+                        “This system really helps manage court schedules efficiently. No more clashes.”
+                    </p>
+                    <hr>
+                    <h6 class="fw-bold mb-0">Daniel Asy</h6>
+                    <small class="text-muted">Sports Committee</small>
+                </div>
+            </div>
+
+            {{-- Feedback 4 --}}
+            <div class="swiper-slide">
+                <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                    <p class="text-muted fst-italic">
+                        “Booking courts at IIUM has never been this convenient. Great job!”
+                    </p>
+                    <hr>
+                    <h6 class="fw-bold mb-0">Alep Nazar</h6>
+                    <small class="text-muted">Mustangs Tennis Player</small>
+                </div>
+            </div>
+
+            {{-- Feedback 5 --}}
+            <div class="swiper-slide">
+                <div class="card border-0 shadow-sm rounded-4 p-4 h-100 color-light">
+                    <p class="text-muted fst-italic">
+                        “Padu CBS ni. Memang memudahkan kerja student untuk booking. TQVM Developer”
+                    </p>
+                    <hr>
+                    <h6 class="fw-bold mb-0">Fahim Faizal</h6>
+                    <small class="text-muted">Mustangs Tennis Player</small>
+                </div>
+            </div>
+
+            {{-- Feedback 6 --}}
+            <div class="swiper-slide">
+                <div class="card border border-white shadow-sm rounded-4 p-4 h-100">
+                    <p class="text-muted fst-italic">
+                        “Kemah keming sistem ni. Sek kito mandi lanjey”
+                    </p>
+                    <hr>
+                    <h6 class="fw-bold mb-0">Muhammad Muaz</h6>
+                    <small class="text-muted">Mustangs Hockey Player</small>
+                </div>
+            </div>
+
+        </div>
+
+        {{-- Navigation --}}
+        <div class="swiper-pagination"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+
+<script>
+    const feedbackSwiper = new Swiper(".feedbackSwiper", {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        loop: true,
+        autoplay: {
+            delay: 4000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: ".feedbackSwiper .swiper-pagination",
+            clickable: true,
+        },
+        navigation: {
+            nextEl: ".feedbackSwiper .swiper-button-next",
+            prevEl: ".feedbackSwiper .swiper-button-prev",
+        },
+        breakpoints: {
+            768: {
+                slidesPerView: 2,
+            },
+            992: {
+                slidesPerView: 3,
+            },
+        },
+    });
+</script>
+
 {{-- CONTACT US SECTION START --}}
 <style>
-    /* Custom grey background specific to contact section */
+    /* UPDATED: Changed background to light grey */
     .contact-section-bg {
-        background-color: #a6a6a6; /* Medium grey match */
-        color: white;
+        background-color: #f8f9fa; /* Light grey */
+        color: #333; /* Dark text */
     }
     
+    /* UPDATED: Added border and rounded corners to inputs for visibility on white */
     .contact-input {
-        border: none;
-        border-radius: 0;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
         padding: 15px;
         margin-bottom: 15px;
         width: 100%;
+        background-color: #f8f9fa;
     }
     
     .contact-btn {
-        background-color: #ff0000; /* Bright red */
+        background-color: #198754; /* Bright red */
         color: white;
         border: none;
         border-radius: 50px; /* Pill shape */
@@ -340,21 +427,23 @@
         font-weight: bold;
         text-transform: uppercase;
         letter-spacing: 1px;
+        transition: 0.2s;
     }
     
     .contact-btn:hover {
-        background-color: #cc0000;
+        background-color: #087542;
         color: white;
+        box-shadow: 0 4px 10px rgba(204, 0, 0, 0.3);
     }
 
     .contact-header {
-        font-weight: 400; /* Thin font for "CONTACT US" */
+        font-weight: 400;
         color: #333;
         font-size: 2.5rem;
     }
 
     .contact-sub-header {
-        color: #ff0000; /* Red text */
+        color: #198754; /* Red text */
         font-weight: bold;
         margin-bottom: 20px;
     }
@@ -362,73 +451,78 @@
     .contact-icon {
         font-size: 1.5rem;
         margin-right: 15px;
-        color: black;
+        color: #198754; /* Red icon */
     }
     
+    /* UPDATED: Changed text color to dark grey */
     .contact-info-text {
-        color: white;
+        color: #6c757d; /* Text muted */
         font-size: 0.95rem;
     }
 </style>
 
-<div class="full-bleed-section contact-section-bg py-5">
+<div class="full-bleed-section contact-section-bg py-5 my-5">
     <div class="container">
-        <div class="row align-items-center">
-            
-            {{-- LEFT COLUMN: FORM --}}
-            <div class="col-md-6">
-                {{-- Point the form to the route we will create in Part 2 --}}
-                <form action="{{ route('contact.send') }}" method="POST">
-                    @csrf {{-- Security token required by Laravel --}}
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <input type="text" name="name" class="contact-input" placeholder="Name" required>
-                        </div>
-                        <div class="col-md-6">
-                            <input type="email" name="email" class="contact-input" placeholder="Email" required>
-                        </div>
-                    </div>
-                    
-                    <textarea name="message" class="contact-input" rows="6" placeholder="Message" required></textarea>
-                    
-                    <div class="text-center mt-3">
-                        <button type="submit" class="contact-btn">Send Message</button>
-                    </div>
-                </form>
-            </div>
-
-            {{-- RIGHT COLUMN: INFO --}}
-            <div class="col-md-6 ps-md-5 mt-4 mt-md-0">
-                <h2 class="contact-header mb-0">CONTACT US</h2>
-                <p class="contact-sub-header">IIUM</p>
+        {{-- UPDATED: Wrapped content in a white shadow card --}}
+        <div class="card border-0 shadow rounded-4 p-4 p-md-5 bg-white">
+            <div class="row align-items-center">
                 
-                {{-- Address --}}
-                <div class="d-flex align-items-start mb-3">
-                    <i class="bi bi-geo-alt-fill contact-icon"></i>
-                    <p class="contact-info-text mb-0">
-                        Lot 7 Jalan Lada Sulah 16/11, seksyen 16, <br>
-                        40150 Shah Alam, Selangor
-                    </p>
+                {{-- LEFT COLUMN: FORM --}}
+                <div class="col-md-6">
+                    <form action="{{ route('contact.send') }}" method="POST">
+                        @csrf 
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" name="name" class="contact-input" placeholder="Name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="email" name="email" class="contact-input" placeholder="Email" required>
+                            </div>
+                        </div>
+                        
+                        <textarea name="message" class="contact-input" rows="6" placeholder="Message" required></textarea>
+                        
+                        <div class="text-center mt-3">
+                            <button type="submit" class="contact-btn shadow-sm">Send Message</button>
+                        </div>
+                    </form>
                 </div>
 
-                {{-- Email --}}
-                <div class="d-flex align-items-center mb-3">
-                    <i class="bi bi-chat-left-text-fill contact-icon"></i> <p class="contact-info-text mb-0">
-                        booksportiium@gmail.com
-                    </p>
+                {{-- RIGHT COLUMN: INFO --}}
+                <div class="col-md-6 ps-md-5 mt-5 mt-md-0">
+                    <h2 class="contact-header mb-0">CONTACT US</h2>
+                    <p class="contact-sub-header">IIUM SPORTS CENTRE</p>
+                    
+                    {{-- Address --}}
+                    <div class="d-flex align-items-start mb-4">
+                        <i class="bi bi-geo-alt-fill contact-icon"></i>
+                        <p class="contact-info-text mb-0">
+                            IIUM Sports Complex, <br>
+                            International Islamic University Malaysia, <br>
+                            Jalan Gombak, 53100 Kuala Lumpur.
+                        </p>
+                    </div>
+
+                    {{-- Email --}}
+                    <div class="d-flex align-items-center mb-4">
+                        <i class="bi bi-envelope-fill contact-icon"></i>
+                        <p class="contact-info-text mb-0">
+                            booksportiium@gmail.com
+                        </p>
+                    </div>
+
+                    {{-- Phone --}}
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-telephone-fill contact-icon"></i>
+                        <p class="contact-info-text mb-0">
+                            +603 6421 4000
+                        </p>
+                    </div>
                 </div>
 
-                {{-- Phone --}}
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-telephone-fill contact-icon"></i>
-                    <p class="contact-info-text mb-0">
-                        0355100175 or 0192379934
-                    </p>
-                </div>
             </div>
-
-        </div>
+        </div> {{-- End of Card Wrapper --}}
     </div>
 </div>
 {{-- CONTACT US SECTION END --}}

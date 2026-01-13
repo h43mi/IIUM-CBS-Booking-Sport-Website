@@ -171,13 +171,19 @@
                                     {{ \Carbon\Carbon::parse($booking->created_at)->diffForHumans() }}
                                 </td>
                                 <td>
-                                    <span class="fw-bold text-dark">{{ $booking->court->name ?? 'Unknown' }}</span>
-                                    <br>
-                                    <small class="text-muted">
-                                        {{ $booking->date }} 
-                                        ({{ \Carbon\Carbon::parse($booking->start_time)->format('h:i A') }})
-                                    </small>
-                                </td>
+    <span class="fw-bold text-dark">
+        {{ $booking->court->name ?? 'Unknown' }}
+    </span>
+
+    <div class="small text-muted mt-1">
+        {{ $booking->court_number }}
+    </div>
+
+    <small class="text-muted d-block mt-1">
+        {{ \Carbon\Carbon::parse($booking->date)->format('d M Y') }}
+        ({{ \Carbon\Carbon::parse($booking->start_time)->format('h:i A') }})
+    </small>
+</td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="bg-light text-dark fw-bold rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 30px; height: 30px; font-size: 12px;">

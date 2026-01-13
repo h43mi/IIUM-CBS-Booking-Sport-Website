@@ -7,7 +7,12 @@
     <title>@yield('title', 'IIUM CBS')</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    {{-- 1. BOOTSTRAP ICONS --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    {{-- 2. ADDED FONT AWESOME (Required for fa-solid icons) --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -17,6 +22,7 @@
         .nav-link { font-weight: 500; color: #555; transition: 0.2s; }
         .nav-link:hover { color: #000; }
         .dropdown-item:active { background-color: #00665c; }
+        .swiper-slide {color #ffffff}
     </style>
 </head>
 <body>
@@ -81,6 +87,7 @@
             </div>
         </div>
     </nav>
+    
 
 
     <style>
@@ -102,7 +109,7 @@
         @yield('content')
     </div>
 
-    <footer class="bg-dark text-white text-center py-4 mt-5">
+    <footer class="bg-dark text-white text-center py-4 mt-0">
         <div class="container">
             <small class="opacity-75">&copy; {{ date('Y') }} IIUM Court Booking System. All rights reserved.</small>
         </div>

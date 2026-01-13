@@ -91,9 +91,18 @@
                                 <small class="text-muted">{{ $booking->user->email ?? '' }}</small>
                             </td>
                             <td>
-                                <span class="badge bg-primary bg-opacity-10 text-primary">{{ $booking->court->type }}</span>
-                                <div class="small mt-1">{{ $booking->court->name }}</div>
-                            </td>
+    <span class="badge bg-primary bg-opacity-10 text-primary">
+        {{ $booking->court->type }}
+    </span>
+
+    <div class="fw-semibold mt-1">
+        {{ $booking->court->name }}
+    </div>
+
+    <small class="text-muted">
+        {{ $booking->court_number }}
+    </small>
+</td>
                             <td>
                                 <div>{{ \Carbon\Carbon::parse($booking->date)->format('d M Y') }}</div>
                                 <small class="text-muted">{{ \Carbon\Carbon::parse($booking->start_time)->format('h:i A') }}</small>

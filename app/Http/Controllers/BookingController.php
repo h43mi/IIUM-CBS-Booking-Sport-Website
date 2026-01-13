@@ -252,6 +252,8 @@ class BookingController extends Controller
         $proof = $original->payment_proof;
         $createdAt = $original->created_at;
 
+        $courtNumber = $original->court_number;
+
         Booking::where('group_id', $group_id)->delete();
 
         $startTime = \Carbon\Carbon::parse($request->start_time);

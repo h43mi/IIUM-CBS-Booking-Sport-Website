@@ -1,3 +1,4 @@
+
 @extends('master.layout')
 
 @section('title', 'My Dashboard')
@@ -51,7 +52,8 @@
 
 <div class="row mb-5 align-items-end">
     <div class="col-md-8">
-        <h2 class="fw-bold text-dark">My Dashboard 👤</h2>
+        {{-- UPDATED: Added Font Awesome Icon here --}}
+        <h2 class="fw-bold text-dark">My Dashboard <i class="fa-solid fa-user ms-2" style="color: #198754;"></i></h2>
         <p class="text-muted mb-0">Manage your upcoming games and view booking history.</p>
     </div>
     <div class="col-md-4 text-md-end">
@@ -82,6 +84,9 @@
                                 {{ $booking->court->type }}
                             </span>
                             <h5 class="fw-bold text-dark mb-0">{{ $booking->court->name }}</h5>
+                            <span class="badge bg-light text-dark border mt-1">
+    {{ $booking->court_number }}
+</span>
                         </div>
                         <div class="text-end">
                             <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2">Confirmed</span>
@@ -144,7 +149,7 @@
 </div>
 
 
-<h5 class="fw-bold text-dark mb-3">Booking History 📜</h5>
+<h5 class="fw-bold text-dark mb-3">Booking History <i class="fa-solid fa-clock-rotate-left ms-2" style="color: #198754;"></i></h5>
 <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -163,10 +168,20 @@
                         <td class="ps-4 fw-bold text-secondary">
                             #{{ $booking->group_id }}
                         </td>
+
                         <td>
-                            <span class="d-block fw-bold text-dark">{{ $booking->court->name }}</span>
-                            <small class="text-muted">{{ $booking->court->type }}</small>
-                        </td>
+    <span class="d-block fw-bold text-dark">
+        {{ $booking->court->name }}
+    </span>
+
+    <span class="d-block small text-muted">
+        {{ $booking->court_number }}
+    </span>
+
+    <small class="text-muted">
+        {{ $booking->court->type }}
+    </small>
+</td>
                         <td>
                             {{ \Carbon\Carbon::parse($booking->date)->format('d M Y') }}
                             <small class="text-muted ms-2">({{ \Carbon\Carbon::parse($booking->start_time)->format('h:i A') }})</small>

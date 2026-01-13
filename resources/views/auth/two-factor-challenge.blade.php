@@ -1,8 +1,11 @@
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
+    <img src="{{ asset('assets/img/logoCBS.png') }}"
+         alt="IIUM CBS Logo"
+         class="mx-auto d-block"
+         style="height: 100px;">
+</x-slot>
 
         <div x-data="{ recovery: false }">
             <div class="mb-4 text-sm text-gray-600" x-show="! recovery">
