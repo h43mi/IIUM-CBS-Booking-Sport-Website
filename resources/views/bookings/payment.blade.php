@@ -16,10 +16,10 @@
             <div class="col-md-5 text-center border-end">
                 <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
                     <h5 class="fw-bold mb-3 text-success">Total: RM {{ number_format($totalPrice, 2) }}</h5>
-                    
-                    <div class="bg-light rounded-3 d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 250px; height: 250px; border: 2px dashed #ccc;">
-                        <span class="text-muted">QR CODE HERE</span>
-                    </div>
+
+                    <div class="bg-white rounded-3 d-flex align-items-center justify-content-center mx-auto mb-3 shadow-sm" style="width: 250px; height: 250px; overflow: hidden;">
+                        <img src="{{ asset('assets/img/qr.jpeg') }}" alt="Payment QR Code" class="img-fluid rounded-3" style="object-fit: contain; width: 100%; height: 100%;">
+                    </div>    
 
                     <p class="small text-muted mb-0">
                         1. Open your Banking App / TNG.<br>

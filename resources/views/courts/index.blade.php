@@ -8,6 +8,11 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
 <style>
+
+    html, body {
+        overflow-x: hidden; /* Hides the horizontal scrollbar */
+        max-width: 100%;
+    }
     /* Force full width to touch edges */
     .full-bleed-hero {
         width: 100vw;
