@@ -72,7 +72,7 @@ Our database consists of 3 main tables designed to handle users, sports faciliti
 * **One-to-Many**: A User can have many Bookings.
 * **One-to-Many**: A Category contains many Courts.
 * **One-to-Many**: A Court can be associated with many Bookings.
-* ## 2. Laravel Component Implementation
+ ## 2. Laravel Component Implementation
 ### **Routes (`routes/web.php`)**
 The application uses **Laravel Jetstream** middleware to handle role-based access. A custom "Traffic Cop" logic redirects users to the appropriate interface upon login:
 ```php
@@ -155,7 +155,7 @@ class Booking extends Model {
    - **Color Scheme**: Green and white theme professionalizing the campus sports experience.
    - **Navigation**: Intuitive role-based menus that dynamically update based on whether a user is a normal user or an Admin.
    - **Interactive Elements**: Real-time **AJAX** availability checks, dynamic **Swiper.js** sliders, and **SweetAlert2** for elegant user feedback.
-* ## 3. User Authentication System
+ ## 3. User Authentication System
 The IIUM Court Booking System implements a secure and robust authentication system using Laravel Jetstream with Livewire. The authentication workflow is handled through multiple Blade view files, each responsible for a specific authentication process.
 * ### **Authentication Features**
   1. User Registration
