@@ -190,7 +190,7 @@ The IIUM Court Booking System implements a secure and robust authentication syst
      - Confirms the authencity of user email addresses
   6. Middleware protection
      - Access to protected routes is restricted using authentication middleware
-* ## 4. Installation and Setup Instructions
+ ## 4. Installation and Setup Instructions
   
 * ### **Prerequisites**
   1. PHP ≥ 8.1
@@ -247,7 +247,7 @@ The IIUM Court Booking System implements a secure and robust authentication syst
   * npm run dev
 
 
-* ## 5. Testing and Quality Assurance
+ ## 5. Testing and Quality Assurance
 The IIUM Court Booking System was tested to ensure functionality, compatibility, and performance.
 * ### **Functionality Testing**
 1. User registration and login tested with valid and invalid credentials
